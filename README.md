@@ -35,6 +35,11 @@ The expected product shape is:
 3. Design a plugin model for bundlers, package managers, and deploy targets.
 4. Produce a minimal demo with repeatable local build and release checks.
 
+## Documents
+
+- [Roadmap](./ROADMAP.md)
+- [Architecture](./docs/architecture.md)
+
 ## Working Principles
 
 - one command surface, many adapters
