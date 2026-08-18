@@ -4,25 +4,27 @@ Deep MVP track for Client Platform Labs v1.
 
 ## Now
 
-- Lock lifecycle language: bootstrap, build, verify, pack, release.
-- Define artifact contracts.
+- Artifact contract (locked): `outDir` + `artifact-manifest.json` (entries, files, optional hashes).
+- `verify` (locked): existence, non-empty, entry resolution, optional sourcemaps.
+- Adapter surface (locked): `build` / `clean` / `resolveOutputs`; first adapter Vite 8.
 - CLI surface (locked): `init`, `build`, `verify`, `doctor`.
-- Default preset (locked): `web-vite`.
+- Default preset (locked): `web-vite` → `products.buildRelease` + manifest targets/tooling/entry/outDir.
 
 ## Next
 
-- Local MVP: init a Vite SPA, reproducible `build`, local `verify` without deploying.
-- Bundler adapter interface with Vite 8 first.
+- Local MVP: init Vite SPA, reproducible `build`, local `verify` without deploying.
+- Emit `dist/artifact-manifest.json` from `resolveOutputs`.
 
 ## Later
 
 - `release` and remote deploy adapters.
-- `pack` as an explicit command if artifact graphs need it.
-- Cache, incremental, and provenance features.
+- Mandatory hashes, size budgets, provenance.
+- `pack` if artifact graphs need an explicit command.
 
 ## Non-goals for v1
 
-- Remote `release` in the first deep MVP.
-- Owning a company CI product.
-- Replacing Vite, webpack, or Rspack.
-- App-specific release approvals.
+- Remote `release`.
+- Signing / SLSA.
+- Owning company CI.
+- Replacing Vite/webpack/Rspack.
+- Adapter `dev`/`watch` as part of the contract.
