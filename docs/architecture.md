@@ -16,18 +16,45 @@ Family files:
 
 - Workspace config: `client-platform.config.jsonc`
 - Project manifest: `client-platform.manifest.jsonc`
+- Build-release settings: `products.buildRelease` inside Workspace Config
 
 ## Product shape
 
 ```text
-CLI  ->  task graph  ->  bundler/package-manager adapters  ->  artifacts  ->  release adapters
+CLI  ->  task graph  ->  bundler adapters  ->  outDir + artifact-manifest.json  ->  verify
 ```
 
-- **CLI**: the user-facing lifecycle.
-- **Task graph**: named, cacheable, dependency-aware steps.
-- **Bundler adapters**: Vite, webpack, Rspack, Metro, and others behind one interface.
-- **Release adapters**: where artifacts go after they pass verify.
-- **Presets**: app-type defaults (SPA, MPA, library, hybrid shell).
+- **CLI**: `init`, `build`, `verify`, `doctor` (no remote `release` in deep MVP v1).
+- **Artifact contract**: output directory + `artifact-manifest.json`.
+- **Bundler adapters**: Vite first; webpack/Rspack later behind the same interface.
+- **Presets**: default `web-vite`.
+
+## Artifact manifest (v1)
+
+Path: `<outDir>/artifact-manifest.json` (default `dist/artifact-manifest.json`).
+
+Minimum fields:
+
+- `schemaVersion`
+- `entries`
+- `files`
+- optional `hash` per file
+- optional `sourcemaps`
+
+## Adapter interface (v1)
+
+- `build(ctx)`
+- `clean(ctx)`
+- `resolveOutputs(ctx)` → manifest draft
+
+Out of contract: `dev`, `watch`, `analyze`.
+
+## `verify` v1
+
+- manifest validates
+- files exist and are non-empty
+- entries resolve
+- declared sourcemaps exist when listed
 
 ## Proposed package split
 
@@ -43,16 +70,15 @@ This Product is also loadable by the Umbrella CLI `client-platform` through `pac
 
 | Flow | Input | Output |
 | --- | --- | --- |
-| `init` | app or empty repo | config, scripts, baseline pipeline |
-| `build` | source + config | addressable artifacts |
-| `verify` | artifacts + policies | signed-off report or failures |
-| `release` | verified artifacts + target | published/deployed result |
+| `init` | app or empty repo | `products.buildRelease`, manifest fields, Vite template |
+| `build` | source + config | `outDir` + `artifact-manifest.json` |
+| `verify` | artifacts + manifest | signed-off report or failures |
+| `release` | deferred past deep MVP v1 | — |
 
 ## What this repo should own
 
-- Build/release lifecycle and artifact contracts.
-- Bundler and deploy adapters.
-- Verify policies that are about shipping, not product analytics.
+- Build/verify lifecycle and artifact contracts.
+- Bundler adapters.
 - Presets and examples.
 
 ## What lives in the family kernel
