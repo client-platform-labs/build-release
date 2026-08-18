@@ -6,7 +6,8 @@
 
 - Runtime: Node.js 24.x LTS + TypeScript.
 - CLI framework: `commander`.
-- Packaging: ESM-first npm packages with a `bin` entry.
+- Packaging: ESM-first npm packages under `@client-platform/*`, with Product `bin` entries plus family command `client-platform`.
+- Plugin metadata: `package.json#clientPlatform`.
 - Command loading: static core commands; heavy/optional paths via `import()`.
 - Config: human-authored JSONC, validated with JSON Schema 2020-12 via Ajv.
 - Documents carry `schemaVersion` and migrate before validation.
@@ -30,11 +31,13 @@ CLI  ->  task graph  ->  bundler/package-manager adapters  ->  artifacts  ->  re
 
 ## Proposed package split
 
-- `build-release` CLI package
-- `@.../build-core`
-- `@.../adapter-vite` / `@.../adapter-rspack` / ...
-- `@.../preset-*`
+- `@client-platform/build-release` CLI package, bin `build-release`
+- `@client-platform/build-core`
+- `@client-platform/adapter-vite` / `@client-platform/adapter-rspack` / ...
+- `@client-platform/preset-*`
 - `examples/*`
+
+This Product is also loadable by the Umbrella CLI `client-platform` through `package.json#clientPlatform`.
 
 ## Inputs and outputs
 
