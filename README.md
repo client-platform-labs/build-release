@@ -4,41 +4,18 @@ Client platform build and release engineering toolkit for frontend projects.
 
 ## Vision
 
-`build-release` is intended to standardize how frontend applications are built, packaged, validated, and shipped. The focus is a portable engineering toolkit that improves consistency across repositories without forcing every team into the same app architecture.
+`build-release` standardizes how frontend applications are built, packaged, and verified. It orchestrates tools (Vite first); it does not become a bundler.
 
 ## Scope
 
-This repository is intended to cover:
+v1 covers local bootstrap, build, and artifact verification:
 
-- local development and build orchestration
-- packaging and artifact conventions
-- release validation and preflight checks
-- environment-aware deployment workflows
-- reusable CLI commands, presets, and templates
+- `init` — apply the `web-vite` preset
+- `build` — run the Vite adapter, then write `artifact-manifest.json`
+- `verify` — check the artifact contract
+- `doctor` — light environment/config diagnostics
 
-This repository should not own product-specific CI pipelines or business release logic.
-
-## Planned Shape
-
-The expected product shape is:
-
-- a CLI for bootstrap, build, verify, and release flows
-- reusable core modules for task orchestration
-- adapters for common bundlers and deployment targets
-- presets for standard project types
-- examples showing local-to-release workflows
-
-## Initial Milestones
-
-1. Define the common build/release lifecycle and terminology.
-2. Identify shared config, task, and artifact abstractions.
-3. Design a plugin model for bundlers, package managers, and deploy targets.
-4. Produce a minimal demo with repeatable local build and release checks.
-
-## Documents
-
-- [Roadmap](./ROADMAP.md)
-- [Architecture](./docs/architecture.md)
+Remote release, signing/SLSA, and adapter `dev`/`watch` are out of scope.
 
 ## Local development
 
@@ -50,10 +27,43 @@ Requires Node.js 24.x LTS. This package depends on a local `../kernel` checkout 
 npm install
 npm run build
 node ./bin/build-release.js --help
-node ./bin/build-release.js init
 ```
 
-CLI surface (v1): `init`, `build`, `verify`, `doctor`. Default preset: `web-vite`.
+CLI surface: `init`, `build`, `verify`, `doctor`. Default preset: `web-vite`.
+
+## init → build → verify
+
+Run the CLI against an app directory (empty is fine). `init` writes family config plus a minimal Vite SPA.
+
+```bash
+# from this repo, after npm install && npm run build
+DEMO=$(mktemp -d)
+cd "$DEMO"
+
+node /path/to/build-release/bin/build-release.js init
+node /path/to/build-release/bin/build-release.js build
+node /path/to/build-release/bin/build-release.js verify
+```
+
+`init` writes:
+
+- `client-platform.config.jsonc` with `products.buildRelease` (`adapter=vite`, `outDir=dist`)
+- `client-platform.manifest.jsonc` with `targets`, `tooling`, `entry`, `outDir`
+- `package.json` (`"type": "module"`), `index.html`, `src/main.js`, `vite.config.js` (skipped if those files already exist)
+
+`build` runs Vite, then writes `<outDir>/artifact-manifest.json` (`schemaVersion`, `entries`, `files`, optional hashes, optional sourcemaps).
+
+`verify` exits non-zero unless:
+
+- the manifest exists and validates
+- every listed file exists and is non-empty
+- every entry resolves to a listed file
+- declared sourcemaps exist
+
+## Documents
+
+- [Roadmap](./ROADMAP.md)
+- [Architecture](./docs/architecture.md)
 
 ## Working Principles
 

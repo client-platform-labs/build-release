@@ -26,7 +26,8 @@
   },
   "dependencies": {
     "@client-platform/kernel": "file:../kernel/packages/kernel",
-    "commander": "^13.1.0"
+    "commander": "^13.1.0",
+    "vite": "^8.2.1"
   },
   "devDependencies": {
     "@types/node": "^24.3.0",
