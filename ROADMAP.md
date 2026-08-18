@@ -1,28 +1,28 @@
 # Roadmap
 
-This is the first delivery map for `build-release`. Shared-kernel ownership is still an open family decision.
+Deep MVP track for Client Platform Labs v1.
 
 ## Now
 
-- Keep the repository charter current.
-- Lock the lifecycle language: bootstrap, build, verify, pack, release.
-- Define artifact contracts: what a build emits, where it lives, and how it is addressed.
-- Define the first CLI surface: `init`, `build`, `verify`, `release`, `doctor`.
+- Lock lifecycle language: bootstrap, build, verify, pack, release.
+- Define artifact contracts.
+- CLI surface (locked): `init`, `build`, `verify`, `doctor`.
+- Default preset (locked): `web-vite`.
 
 ## Next
 
-- Ship a local MVP that can bootstrap a standard app, produce a reproducible build, and run preflight checks without deploying anywhere.
-- Add bundler adapters behind a stable task interface.
-- Add environment overlays for `dev` / `test` / `prod` without rewriting task graphs.
+- Local MVP: init a Vite SPA, reproducible `build`, local `verify` without deploying.
+- Bundler adapter interface with Vite 8 first.
 
 ## Later
 
-- Add release-target adapters (static hosting, app stores, internal artifact registries).
-- Add cache, incremental, and provenance features.
-- Align package layout with the family shared kernel once that boundary is decided.
+- `release` and remote deploy adapters.
+- `pack` as an explicit command if artifact graphs need it.
+- Cache, incremental, and provenance features.
 
 ## Non-goals for v1
 
-- Owning a company's CI product.
+- Remote `release` in the first deep MVP.
+- Owning a company CI product.
 - Replacing Vite, webpack, or Rspack.
-- Encoding app-specific release approvals into the toolkit.
+- App-specific release approvals.
