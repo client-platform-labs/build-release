@@ -40,6 +40,21 @@ The expected product shape is:
 - [Roadmap](./ROADMAP.md)
 - [Architecture](./docs/architecture.md)
 
+## Local development
+
+Requires Node.js 24.x LTS. This package depends on a local `../kernel` checkout via `file:` during scaffolding.
+
+```bash
+# from sibling kernel repo first:
+#   cd ../kernel && npm install && npm run build
+npm install
+npm run build
+node ./bin/build-release.js --help
+node ./bin/build-release.js init
+```
+
+CLI surface (v1): `init`, `build`, `verify`, `doctor`. Default preset: `web-vite`.
+
 ## Working Principles
 
 - one command surface, many adapters
